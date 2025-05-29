@@ -7,7 +7,7 @@ services:
             - '/DATA/AppData/openvpnproxy/data/:/data'
             - '/DATA/AppData/openvpnproxy/config/:/config'
         environment:
-            - OPENVPN_PROVIDER=SURFSHARK
+            - OPENVPN_PROVIDER=SURFSHARK #thay SURFSHARK thành tên VPN cung cấp của bạn
             - OPENVPN_CONFIG=vn-hcm.prod.surfshark.com_udp #Thay url server của vpn
             - OPENVPN_USERNAME=abc #điền username openvpn(có thể giống với user acc cũng có thể khác tùy nhà cung cấp vpn)
             - OPENVPN_PASSWORD=xyz #điền pass openvpn(có thể giống với pass acc cũng có thể khác tùy nhà cung cấp vpn)
