@@ -48,9 +48,22 @@ echo "blackden:Abcd1234" | chpasswd
 ➡️ **Thay `blackden` bằng tên người dùng** bạn muốn.  
 ➡️ **Thay `Abcd1234` bằng mật khẩu mạnh** (khó đoán, không phổ biến) để tránh bị scan tấn công.
 
+Nếu chạy stack bị lỗi "/dev/net/tun": no such file or directory thì chạy lệnh sau:
+
+```sh
+sudo mkdir -p /dev/net
+sudo mknod /dev/net/tun c 10 200
+sudo chmod 600 /dev/net/tun
+```
 ---
 
-### 5. Cấu hình Telegram hoặc App hỗ trợ Proxy
+### 5. Nếu dùng mikrotik và cấu hình kết nối telegram và các kết nối nước ngoài đi qua VPN
+-  Chỉ cần dùng file docker-compose-a.yaml
+-  chỉnh sửa dòng external: tun0 thành external: eth0 trong file sockd.conf
+-  Lúc này mọi kết nối tới proxy sẽ tới thẳng địa chỉ ip máy chủ, và ip máy chủ sẽ kết nối tới telegram hoặc các host nước ngoài qua vpn trên rule của mikrotik
+
+---
+### 6. Cấu hình Telegram hoặc App hỗ trợ Proxy
 
 - Mở Telegram (hoặc app SOCKS5 khác)
 - Thêm Proxy:
@@ -62,10 +75,6 @@ echo "blackden:Abcd1234" | chpasswd
 > ✅ Nếu muốn sử dụng từ xa, **hãy mở port 8118** trong firewall/router.
 
 ---
-### 6. Nếu dùng mikrotik và cấu hình kết nối telegram và các kết nối nước ngoài đi qua VPN
--  Chỉ cần dùng file docker-compose-a.yaml
--  chỉnh sửa dòng external: tun0 thành external: eth0 trong file sockd.conf
--  Lúc này mọi kết nối tới proxy sẽ tới thẳng địa chỉ ip máy chủ, và ip máy chủ sẽ kết nối tới telegram hoặc các host nước ngoài qua vpn trên rule của mikrotik
 
 ## 🖼️ Demo
 
