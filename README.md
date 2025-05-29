@@ -62,6 +62,10 @@ echo "blackden:Abcd1234" | chpasswd
 > ✅ Nếu muốn sử dụng từ xa, **hãy mở port 8118** trong firewall/router.
 
 ---
+### 6. Nếu dùng mikrotik và cấu hình kết nối telegram và các kết nối nước ngoài đi qua VPN
+-  Chỉ cần dùng file docker-compose-a.yaml
+-  chỉnh sửa dòng external: tun0 thành external: eth0 trong file sockd.conf
+-  Lúc này mọi kết nối tới proxy sẽ tới thẳng địa chỉ ip máy chủ, và ip máy chủ sẽ kết nối tới telegram hoặc các host nước ngoài qua vpn trên rule của mikrotik
 
 ## 🖼️ Demo
 
