@@ -1,0 +1,15 @@
+services:
+    socks5-proxy:
+        image: wernight/dante
+        restart: unless-stopped
+        ports:
+            - '8118:1080'
+        volumes:
+            - '/DATA/AppData/openvpnproxy/sockd.conf:/etc/sockd.conf:rw' #file sockd.conf bạn để ở đâu thì thay /DATA/AppData/openvpnproxy/sockd.conf
+        command:
+            - /bin/sh
+            - -c
+            - |
+                adduser -D -H -s /sbin/nologin blackden
+                echo "blackden:Abcd1234" | chpasswd
+                sockd -f /etc/sockd.conf
