@@ -1,0 +1,46 @@
+services:
+    transmission-openvpn:
+        cap_add:
+            - NET_ADMIN
+            - SYS_MODULE
+        volumes:
+            - '/DATA/AppData/openvpnproxy/data/:/data'
+            - '/DATA/AppData/openvpnproxy/config/:/config'
+        environment:
+            - OPENVPN_PROVIDER=SURFSHARK
+            - OPENVPN_CONFIG=vn-hcm.prod.surfshark.com_udp #Thay url server của vpn
+            - OPENVPN_USERNAME=abc #điền username openvpn(có thể giống với user acc cũng có thể khác tùy nhà cung cấp vpn)
+            - OPENVPN_PASSWORD=xyz #điền pass openvpn(có thể giống với pass acc cũng có thể khác tùy nhà cung cấp vpn)
+            - LOCAL_NETWORK=192.168.1.0/24 #thay subnet ip của bạn
+            - CREATE_TUN_DEVICE=false
+
+        devices:
+            - /dev/net/tun:/dev/net/tun
+        logging:
+            driver: json-file
+            options:
+                max-size: 10m
+        ports:
+            - '8118:1080' #thay 8118 thành port bạn muốn dùng để làm port proxy(để port lạ tránh bị scan nhiều)
+        image: haugene/transmission-openvpn
+    socks5-proxy:
+        image: wernight/dante
+        restart: unless-stopped
+        network_mode: service:transmission-openvpn
+        
+        depends_on:
+            - transmission-openvpn
+        volumes:
+            - '/DATA/AppData/openvpnproxy/sockd.conf:/etc/sockd.conf:rw' #file sockd.conf bạn để ở đâu thì thay /DATA/AppData/openvpnproxy/sockd.conf
+        command:
+            - /bin/sh
+            - -c
+            - |
+                echo "Waiting for VPN to connect . . ."
+                while ! ip link show tun0 >/dev/null 2>&1 || ! ip link show tun0 | grep -q "UP"; do sleep 1; done
+                echo "VPN connected. Starting proxy service . . ."
+                adduser -D -H -s /sbin/nologin blackden
+                echo "blackden:Abcd1234" | chpasswd
+                sockd -f /etc/sockd.conf
+
+
